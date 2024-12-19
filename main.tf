@@ -14,7 +14,7 @@ resource "azurerm_resource_group" "example" {
   location = "East US"                 # Location (Azure Region)
 }
 
-# Variables
+
 variable "subscription_id" {}
 variable "client_id" {}
 variable "client_secret" {}
