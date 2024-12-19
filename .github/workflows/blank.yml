@@ -40,23 +40,26 @@ jobs:
       # Step 5: Terraform Plan (on Push)
       - name: Terraform Plan
         if: github.event_name == 'push'
-        run: terraform plan -var "subscription_id=$ARM_SUBSCRIPTION_ID" \
-                            -var "client_id=$ARM_CLIENT_ID" \
-                            -var "client_secret=$ARM_CLIENT_SECRET" \
-                            -var "tenant_id=$ARM_TENANT_ID"
+        run: terraform plan \
+          -var="subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}" \
+          -var="client_id=${{ secrets.ARM_CLIENT_ID }}" \
+          -var="client_secret=${{ secrets.ARM_CLIENT_SECRET }}" \
+          -var="tenant_id=${{ secrets.ARM_TENANT_ID }}"
 
       # Step 6: Terraform Apply (on PR Merge)
       - name: Terraform Apply
         if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
-        run: terraform apply -auto-approve -var "subscription_id=$ARM_SUBSCRIPTION_ID" \
-                                         -var "client_id=$ARM_CLIENT_ID" \
-                                         -var "client_secret=$ARM_CLIENT_SECRET" \
-                                         -var "tenant_id=$ARM_TENANT_ID"
+        run: terraform apply -auto-approve \
+          -var="subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}" \
+          -var="client_id=${{ secrets.ARM_CLIENT_ID }}" \
+          -var="client_secret=${{ secrets.ARM_CLIENT_SECRET }}" \
+          -var="tenant_id=${{ secrets.ARM_TENANT_ID }}"
 
       # Step 7: Terraform Destroy (Manual Trigger)
       - name: Terraform Destroy
         if: github.event_name == 'workflow_dispatch'
-        run: terraform destroy -auto-approve -var "subscription_id=$ARM_SUBSCRIPTION_ID" \
-                                              -var "client_id=$ARM_CLIENT_ID" \
-                                              -var "client_secret=$ARM_CLIENT_SECRET" \
-                                              -var "tenant_id=$ARM_TENANT_ID"
+        run: terraform destroy -auto-approve \
+          -var="subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}" \
+          -var="client_id=${{ secrets.ARM_CLIENT_ID }}" \
+          -var="client_secret=${{ secrets.ARM_CLIENT_SECRET }}" \
+          -var="tenant_id=${{ secrets.ARM_TENANT_ID }}"
