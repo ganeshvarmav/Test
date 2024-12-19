@@ -1,13 +1,13 @@
 name: Terraform Workflow
 
 on:
-  push:
+  push:                       # Trigger workflow on every push
     branches:
-      - "**"          # Trigger on every branch push for validate and plan
-  pull_request:
+      - "**"
+  pull_request:               # Trigger workflow on pull requests
     branches:
-      - main          # Trigger on PRs targeting main for plan
-  workflow_dispatch:   # Manual trigger for terraform destroy
+      - main
+  workflow_dispatch:          # Manual trigger for specific actions
 
 jobs:
   terraform:
@@ -20,8 +20,8 @@ jobs:
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
     steps:
-      # Step 1: Checkout the code
-      - name: Checkout code
+      # Step 1: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
 
       # Step 2: Setup Terraform
@@ -31,19 +31,19 @@ jobs:
           terraform_version: 1.5.7
 
       # Step 3: Initialize Terraform
-      - name: Initialize Terraform
+      - name: Terraform Init
         run: terraform init
 
       # Step 4: Validate Terraform Configuration
-      - name: Validate Terraform
+      - name: Terraform Validate
         run: terraform validate
 
-      # Step 5: Terraform Plan (for push or PRs)
+      # Step 5: Terraform Plan
       - name: Terraform Plan
         if: github.event_name == 'push' || github.event_name == 'pull_request'
         run: terraform plan -out=tfplan
 
-      # Step 6: Terraform Apply (for merges into main)
+      # Step 6: Terraform Apply
       - name: Terraform Apply
         if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
         run: terraform apply -auto-approve tfplan
@@ -52,3 +52,4 @@ jobs:
       - name: Terraform Destroy
         if: github.event_name == 'workflow_dispatch'
         run: terraform destroy -auto-approve
+
