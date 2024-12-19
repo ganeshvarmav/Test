@@ -14,7 +14,7 @@ resource "azurerm_resource_group" "example" {
   location = "East US"                 # Azure Region where the Resource Group will be created
 }
 
-# Define variables
+
 variable "subscription_id" {}
 variable "client_id" {}
 variable "client_secret" {}
